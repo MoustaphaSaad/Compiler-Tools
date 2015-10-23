@@ -34,11 +34,42 @@ namespace CTools{
 		bool star();
 		
 		bool Union();
+
+		void Combine(RegEx& reg);
 		
 		std::string concatExpand(std::string reg);
 		
-		bool createNFA(std::string reg);		
+		std::string rangeExpand(std::string red);
+
+		std::string plusExpand(std::string reg);
+
+		std::string operatorExpand(std::string reg);
+				
+		bool createNFA(std::string reg);
+
+		FSA_TABLE& getNFA(){return m_NFATable;}
+
+		State* getDFAStart(){if(m_DFATable.size()==0)return nullptr; return m_DFATable[0];}
+
+		State* getDFAState(s32 id)
+		{
+			FSA_TABLE::iterator it;
+			for(it=m_DFATable.begin();it!=m_DFATable.end();it++)
+			{
+				if((*it)->getId() == id)
+					return *it;
+			}
+			return nullptr;
+		}
 
 		bool Eval();
+
+		void EpsilonClosure(std::set<State*> input, std::set<State*> &output);
+
+		void Move(char c, std::set<State*> input, std::set<State*> &output);
+		
+		void ConvertToDFA();
+
+		void OptimizeDFA();
 	};
 }

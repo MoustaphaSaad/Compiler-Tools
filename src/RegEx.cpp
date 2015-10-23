@@ -9,7 +9,7 @@ using namespace CTools;
 bool RegEx::isOperator(char c)
 {
 		return 
-		((c==42) || (c==124) || (c==40) || (c==41) || (c==8));
+		((c==5) || (c==124) || (c==21) || (c==22) || (c==8));
 }
 
 bool RegEx::isInput(char c){
@@ -18,15 +18,15 @@ bool RegEx::isInput(char c){
 
 /**
  * Closure > Concat > Union
- * 	  *    >   8    >   |
+ * 	  5    >   8    >   |
  */
 bool RegEx::presedence(char left, char right){
 	if(left == right)
 		return true;
 	
-	if(left == '*')
+	if(left == 5)
 		return false;
-	if(right == '*')
+	if(right == 5)
 		return true;
 		
 	if(left == 8)
@@ -132,6 +132,25 @@ bool RegEx::Union()
 	return true;
 }
 
+void RegEx::Combine(RegEx& reg)
+{
+	FSA_TABLE::iterator it;
+	for(it = reg.m_NFATable.begin();it != reg.m_NFATable.end();it++)
+	{
+		(*it)->setId(++m_nNextStateID);
+	}
+	set<char>::iterator c;
+	for(c=reg.m_InputSet.begin();c!=reg.m_InputSet.end();c++)
+	{
+		m_InputSet.insert(*c);
+	}
+	m_OperandStack.push(m_NFATable);
+	m_OperandStack.push(reg.m_NFATable);
+	Union();
+	m_NFATable = m_OperandStack.top();
+	m_OperandStack.pop();
+}
+
 std::string RegEx::concatExpand(std::string reg)
 {
 	string res;
@@ -142,16 +161,156 @@ std::string RegEx::concatExpand(std::string reg)
 
 		res += cLeft;
 
-		if((isInput(cLeft)) || (cLeft == ')') || (cLeft == '*'))
-			if((isInput(cRight)) || (cRight == '('))
+		if((isInput(cLeft)) || (cLeft == 22) || (cLeft == 5))
+			if((isInput(cRight)) || (cRight == 21))
 				res += char(8);
 	}
 	res += reg[reg.size()-1];
 	return res;
 }
 
+std::string RegEx::rangeExpand(std::string reg)
+{
+	string res;
+	if(reg.size()>0)
+		res.push_back(reg[0]);
+	for(int i=1;i<reg.size()-1;i++)
+	{
+		char cLeft = reg[i-1];
+		char c = reg[i];
+		char cRight = reg[i+1];
+
+		if(c == '-')
+		{
+			res.erase(res.size()-1,1);
+			if(isInput(cLeft) && isInput(cRight))
+			{
+				for(int j=cLeft;j<=cRight;j++)
+				{
+					if(j!=cLeft)
+						res.push_back('|');
+					res.push_back((char)j);
+				}
+			}
+			i++;
+		}else
+		{
+			//res.push_back(cLeft);
+			res.push_back(c);
+			//res.push_back(cRight);
+		}
+	}
+	if(reg.size()>1)
+		res.push_back(reg.back());
+	return res;
+}
+
+std::string RegEx::plusExpand(std::string reg)
+{
+	string res;
+	if(reg.size()>0)
+		res.push_back(reg[0]);
+	for(int i=1;i<reg.size();i++)
+	{
+		char c = reg[i];
+
+		if(c == '+')
+		{
+			if(reg[i-1] == 39)
+			{
+				if(i+1<reg.size() && reg[i+1] == 39)
+				{
+					res.erase(res.size()-1,1);
+					res.push_back('+');
+					i++;
+					continue;
+				}
+			}
+			string term;
+			//res.push_back('|');
+			for(int j=i-1;j>-1;j--)
+			{
+				char tc = res[j];
+				if(isInput(tc))
+				{
+					term = tc;
+					break;
+				}else if(tc == 22)
+				{
+					int pc = 0;
+					for(int k=j;k>-1;k--)
+					{
+						char kc = res[k];
+						if(kc == 22)
+						{
+							pc++;
+							term.push_back(kc);
+						}else if(kc == 21)
+						{
+							pc--;
+							term.push_back(kc);
+						}else
+						{
+							term.push_back(kc);
+						}
+
+						if(pc == 0)
+							break;
+					}
+					if(term.size()>0)
+						break;
+				}
+			}
+			std::reverse(term.begin(),term.end());
+			res+=term;
+			res.push_back((char)5);
+		}else
+		{
+			res.push_back(c);
+		}
+	}
+	return res;
+}
+
+std::string RegEx::operatorExpand(std::string reg)
+{
+	string res;
+	for(int i=0;i<reg.size();i++)
+	{
+		char c = reg[i];
+
+		if(i-1>=0 && reg[i-1] == 39 && i+1<reg.size() && reg[i+1] == 39)
+		{
+			//do nothing
+			res.erase(res.size()-1,1);
+			res.push_back(c);
+			i++;
+		}else
+		{
+			if(c == '*')
+			{
+				res.push_back(5);
+			}else if(c=='(')
+			{
+				res.push_back(21);
+			}else if(c==')')
+			{
+				res.push_back(22);
+			}else
+			{
+				res.push_back(c);
+			}
+		}
+	}
+	return res;
+}
+
+
 bool RegEx::createNFA(std::string reg)
 {
+	reg = operatorExpand(reg);
+	reg = rangeExpand(reg);
+	reg = plusExpand(reg);
 	reg = concatExpand(reg);
 
 	for(int i=0;i<reg.size();i++)
@@ -162,11 +321,11 @@ bool RegEx::createNFA(std::string reg)
 			push(c);
 		else if(m_OperatorStack.empty())
 			m_OperatorStack.push(c);
-		else if(c=='(')
+		else if(c==21)
 			m_OperatorStack.push(c);
-		else if(c==')')
+		else if(c==22)
 		{
-			while(m_OperatorStack.top()!='(')
+			while(m_OperatorStack.top()!=21)
 				if(!Eval())
 					return false;
 			m_OperatorStack.pop();
@@ -199,7 +358,7 @@ bool RegEx::Eval()
 
 		switch (Op)
 		{
-		case 42:
+		case 5:
 			return star();
 			break;
 		case 124:
@@ -207,7 +366,6 @@ bool RegEx::Eval()
 			break;
 		case 8:
 			return concat();
-			break;
 		}
 
 		return false;
@@ -215,3 +373,159 @@ bool RegEx::Eval()
 	return false;
 }
 
+void RegEx::EpsilonClosure(std::set<State*> input, std::set<State*>& output)
+{
+	output.clear();
+
+	output = input;
+
+	stack<State*> unprocessedStack;
+	set<State*>::iterator it;
+	for(it = input.begin(); it != input.end(); it++)
+	{
+		unprocessedStack.push(*it);
+	}
+
+	while(!unprocessedStack.empty())
+	{
+		State* t = unprocessedStack.top();
+		unprocessedStack.pop();
+
+		vector<State*> epsilonStates;
+		t->getTransition(0,epsilonStates);
+
+		for(int i=0;i<epsilonStates.size();i++)
+		{
+			State* u = epsilonStates[i];
+
+			if(output.find(u) == output.end())
+			{
+				output.insert(u);
+				unprocessedStack.push(u);
+			}
+		}
+	}
+}
+
+void RegEx::Move(char c, std::set<State*> input, std::set<State*>& output)
+{
+	output.clear();
+
+	set<State*>::iterator it;
+	for(it= input.begin();it!= input.end();it++)
+	{
+		State* u = *it;
+		vector<State*> states;
+		u->getTransition(c,states);
+
+		for(int i = 0;i<states.size();i++)
+		{
+			output.insert(states[i]);
+		}
+	}
+}
+
+void RegEx::ConvertToDFA()
+{
+	for(int i=0;i<m_DFATable.size();++i)
+		Services::memory->free(m_DFATable[i]);
+	m_DFATable.clear();
+	
+	if(m_NFATable.size() == 0)
+		return;
+		
+	m_nNextStateID = 0;
+	
+	vector<State*> unmarkedStates;
+	
+	set<State*> DFA_SSet;
+	set<State*> NFA_SSet;
+	
+	NFA_SSet.insert(m_NFATable[0]);
+	
+	//start with start state and all EpsilonClosure states
+	EpsilonClosure(NFA_SSet,DFA_SSet);
+	
+	State* DFA_SS = Services::memory->alloc<State>();
+	new (DFA_SS) State(DFA_SSet,++m_nNextStateID);
+	
+	m_DFATable.push_back(DFA_SS);
+	
+	unmarkedStates.push_back(DFA_SS);
+	
+	while(!unmarkedStates.empty())
+	{
+		State* p_state = unmarkedStates.back();
+		unmarkedStates.pop_back();
+		
+		set<char>::iterator it;
+		
+		for(it = m_InputSet.begin(); it!= m_InputSet.end(); it++){
+			set<State*> move_res, ec_res;
+			
+			Move(*it,p_state->getNFAState(), move_res);
+			EpsilonClosure(move_res,ec_res);
+			
+			bool found = false;
+			State* p = nullptr;
+
+			for(int i=0;i<m_DFATable.size(); ++i)
+			{
+				p = m_DFATable[i];
+
+				if(p->getNFAState() == ec_res)
+				{
+					found = true;
+					break;
+				}
+			}
+			if(!found)
+			{
+				State* U = Services::memory->alloc<State>();
+				new (U) State(ec_res,++m_nNextStateID);
+				unmarkedStates.push_back(U);
+				m_DFATable.push_back(U);
+
+				//link two states together
+				p_state->addTransition(*it,U);
+			}
+			else
+			{
+				p_state->addTransition(*it,p);
+			}
+		}
+	}	
+}
+
+void RegEx::OptimizeDFA()
+{
+	set<State*> Traps;
+	for(int i=0;i<m_DFATable.size();i++)
+	{
+		if(m_DFATable[i]->isDeadEnd())
+			Traps.insert(m_DFATable[i]);
+	}
+
+	if(Traps.empty())
+		return;
+
+	set<State*>::iterator it;
+	for(it = Traps.begin();it!=Traps.end();it++)
+	{
+		for(int i=0;i<m_DFATable.size();i++)
+		{
+			m_DFATable[i]->removeTransition(*it);
+		}
+
+		deque<State*>::iterator pos;
+		for(pos = m_DFATable.begin();pos!=m_DFATable.end();pos++)
+		{
+			if(*pos == *it)
+				break;
+		}
+
+		m_DFATable.erase(pos);
+
+		Services::memory->free(*it);
+	}
+}

@@ -12,6 +12,22 @@ State::State(s32 id):m_id(id), m_accept(false)
 State::State(s32 id, bool accept): m_id(id), m_accept(accept)
 {}
 
+State::State(std::set<State*> NFAState, s32 nID)
+{
+	m_NFAStates = NFAState;
+	m_id = nID;
+
+	m_accept = false;
+
+	//check for accepting states
+	set<State*>::iterator it;
+	for(it = m_NFAStates.begin(); it != m_NFAStates.end();it++)
+	{
+		if((*it)->m_accept)
+			m_accept = true;
+	}
+}
+
 State::~State()
 {}
 
@@ -49,9 +65,26 @@ void State::getTransition(char input, std::vector<State*> &states)
 		}
 }
 
+State* State::Consume(char c)
+{
+	multimap<char, State*>::iterator it;
+	for(it = m_transition.lower_bound(c);
+		it!=m_transition.upper_bound(c);
+		++it)
+	{
+		return (*it).second;
+	}
+	return nullptr;
+}
+
 s32 State::getId()
 {
 	return m_id;
+}
+
+void State::setId(s32 val)
+{
+	m_id = val;
 }
 
 bool State::isDeadEnd()

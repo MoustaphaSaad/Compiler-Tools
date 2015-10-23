@@ -36,16 +36,21 @@ byte* Memory::c_alloc(u32 size)
 void Memory::merge(){
 	map<byte*, u32> m_newTable;
 	map<byte*, u32>::iterator it, n_it;
+	bool koko = false;
 	for(it = m_freeTable.begin(), n_it = ++m_freeTable.begin();
 		it != m_freeTable.end() && n_it != m_freeTable.end();
 		it++, n_it++)
 		{
+			koko = false;
 			if(it->first + it->second == n_it->first){
 				m_newTable[it->first] = it->second + n_it->second;
 			}else{
 				m_newTable[it->first] = it->second;
+				koko = true;
 			}
 		}
+	if(koko)
+		m_newTable[it->first] = it->second;
 	m_freeTable = m_newTable;
 	return;
 }

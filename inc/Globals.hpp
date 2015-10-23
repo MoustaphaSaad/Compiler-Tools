@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 #include <cstddef>
+#include <fstream>
+#include <string>
 
 #if defined(WIN32)||defined(_WIN32)||defined(__WIN32__)||defined(_WIN64)||defined(WIN64)||defined(__MINGW32__)||defined(__MINGW64__)
     #define OS_WINDOWS
@@ -39,4 +41,43 @@ namespace CTools{
     typedef double real64;
     
     static const u32 MEMORY_SIZE = 25 * 1024 * 1024;
+
+	namespace IO
+	{
+		static std::string read(std::string path)
+		{
+			std::string res;
+			std::ifstream file;
+			file.open(path);
+			std::string line;
+			while(getline(file,line))
+			{
+				res+=line+"\n";
+			}
+			file.close();
+			return res;
+		}
+	}
+
+	class API Position
+	{
+	public:
+		s64 absolute_location,row,col;
+		Position()
+		{
+			absolute_location=0;
+			row=0;
+			col=0;
+		}
+		static Position UNDEFINED()
+		{
+			static Position p;
+			p.absolute_location=-1;
+			p.row = -1;
+			p.col = -1;
+			return p;
+		}
+	};
+
+	typedef void (*errorCallback)(std::string,Position);
 }
