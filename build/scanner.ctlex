@@ -1,0 +1,21 @@
+@Tokens
+";" = SEMICOLON
+":=" = ASSIGNMENT_OP
+"<" = LESS_THAN
+"=" = EQUAL
+"'*'" = MULTIPLY_OP
+"'-'" = MINUS_OP
+"'+'" = ADD_OP
+"{" = COMMENT
+"'('" = OPEN_PAREN
+"')'" = CLOSE_PAREN
+"If" = IF
+"Then" = THEN
+"Else" = ELSE
+"End" = END
+"Repeat" = REPEAT
+"Until" = UNTIL
+"Read" = READ
+"Write" = WRITE
+"(0-9)*" = NUMBER
+"(a-z|A-Z)(a-z|A-Z|0-9)*" = ID

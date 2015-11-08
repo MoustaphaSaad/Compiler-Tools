@@ -1,0 +1,174 @@
+﻿Build started 08/11/2015 03:57:20 م.
+     1>Project "H:\Projects\compiler-tools\build\CTools.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\inc /Zi /nologo /W3 /WX- /Ox /Oi /Oy- /D NDEBUG /D COMPILE_DLL /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"obj\Release\CTools\\" /Fd"obj\Release\CTools\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt -std=c++11 -pthread ..\src\RecursiveDescent.cpp
+     1>cl : Command line warning D9002: ignoring unknown option '-std=c++11'
+     1>cl : Command line warning D9002: ignoring unknown option '-pthread'
+         RecursiveDescent.cpp
+     1>h:\projects\compiler-tools\inc\FSM.hpp(11): warning C4251: 'CTools::State::m_transition' : class 'std::multimap<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'CTools::State'
+                 with
+                 [
+                     _Kty=char,
+                     _Ty=CTools::State *
+                 ]
+     1>h:\projects\compiler-tools\inc\FSM.hpp(14): warning C4251: 'CTools::State::m_NFAStates' : class 'std::set<_Kty>' needs to have dll-interface to be used by clients of class 'CTools::State'
+                 with
+                 [
+                     _Kty=CTools::State *
+                 ]
+     1>h:\projects\compiler-tools\inc\RegEx.hpp(13): warning C4251: 'CTools::RegEx::m_NFATable' : class 'std::deque<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::RegEx'
+                 with
+                 [
+                     _Ty=CTools::State *
+                 ]
+     1>h:\projects\compiler-tools\inc\RegEx.hpp(13): warning C4251: 'CTools::RegEx::m_DFATable' : class 'std::deque<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::RegEx'
+                 with
+                 [
+                     _Ty=CTools::State *
+                 ]
+     1>h:\projects\compiler-tools\inc\RegEx.hpp(15): warning C4251: 'CTools::RegEx::m_OperandStack' : class 'std::stack<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::RegEx'
+                 with
+                 [
+                     _Ty=CTools::FSA_TABLE
+                 ]
+     1>h:\projects\compiler-tools\inc\RegEx.hpp(16): warning C4251: 'CTools::RegEx::m_OperatorStack' : class 'std::stack<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::RegEx'
+                 with
+                 [
+                     _Ty=char
+                 ]
+     1>h:\projects\compiler-tools\inc\RegEx.hpp(17): warning C4251: 'CTools::RegEx::m_InputSet' : class 'std::set<_Kty>' needs to have dll-interface to be used by clients of class 'CTools::RegEx'
+                 with
+                 [
+                     _Kty=char
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(18): warning C4251: 'CTools::Token::tag' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'CTools::Token'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(19): warning C4251: 'CTools::Token::lexeme' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'CTools::Token'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(45): warning C4251: 'CTools::Layer::activeStates' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of struct 'CTools::Layer'
+                 with
+                 [
+                     _Ty=CTools::State *
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(46): warning C4251: 'CTools::Layer::activeMIX' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of struct 'CTools::Layer'
+                 with
+                 [
+                     _Ty=CTools::s32
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(47): warning C4251: 'CTools::Layer::lexeme' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of struct 'CTools::Layer'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(54): warning C4251: 'CTools::ScanMachine::m_littleMachines' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::ScanMachine'
+                 with
+                 [
+                     _Ty=CTools::RegEx *
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(56): warning C4251: 'CTools::ScanMachine::m_tags' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::ScanMachine'
+                 with
+                 [
+                     _Ty=std::string
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(58): warning C4251: 'CTools::ScanMachine::m_activeStates' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::ScanMachine'
+                 with
+                 [
+                     _Ty=CTools::State *
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(60): warning C4251: 'CTools::ScanMachine::m_activeMIX' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::ScanMachine'
+                 with
+                 [
+                     _Ty=CTools::s32
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(62): warning C4251: 'CTools::ScanMachine::m_StateStack' : class 'std::stack<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::ScanMachine'
+                 with
+                 [
+                     _Ty=CTools::Layer
+                 ]
+     1>h:\projects\compiler-tools\inc\ScanMachine.hpp(64): warning C4251: 'CTools::ScanMachine::m_word' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'CTools::ScanMachine'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>h:\projects\compiler-tools\inc\PNode.hpp(8): warning C4251: 'CTools::PNode::m_childrens' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::PNode'
+                 with
+                 [
+                     _Ty=CTools::PNode *
+                 ]
+     1>h:\projects\compiler-tools\inc\PNode.hpp(11): warning C4251: 'CTools::PNode::Tag' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'CTools::PNode'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>h:\projects\compiler-tools\inc\PNode.hpp(12): warning C4251: 'CTools::PNode::Value' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'CTools::PNode'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>H:\Projects\compiler-tools\inc\RecursiveDescent.hpp(12): warning C4251: 'CTools::RecursiveDescent::m_begin' : class 'std::_Deque_iterator<_Mydeque>' needs to have dll-interface to be used by clients of class 'CTools::RecursiveDescent'
+                 with
+                 [
+                     _Mydeque=std::_Deque_val<std::_Deque_simple_types<CTools::Token>>
+                 ]
+     1>H:\Projects\compiler-tools\inc\RecursiveDescent.hpp(13): warning C4251: 'CTools::RecursiveDescent::m_end' : class 'std::_Deque_iterator<_Mydeque>' needs to have dll-interface to be used by clients of class 'CTools::RecursiveDescent'
+                 with
+                 [
+                     _Mydeque=std::_Deque_val<std::_Deque_simple_types<CTools::Token>>
+                 ]
+     1>H:\Projects\compiler-tools\inc\RecursiveDescent.hpp(14): warning C4251: 'CTools::RecursiveDescent::m_cursor' : class 'std::_Deque_iterator<_Mydeque>' needs to have dll-interface to be used by clients of class 'CTools::RecursiveDescent'
+                 with
+                 [
+                     _Mydeque=std::_Deque_val<std::_Deque_simple_types<CTools::Token>>
+                 ]
+     1>H:\Projects\compiler-tools\inc\RecursiveDescent.hpp(16): warning C4251: 'CTools::RecursiveDescent::m_errors' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::RecursiveDescent'
+                 with
+                 [
+                     _Ty=std::string
+                 ]
+     1>h:\projects\compiler-tools\inc\Memory.hpp(11): warning C4251: 'CTools::Memory::m_allocTable' : class 'std::map<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'CTools::Memory'
+                 with
+                 [
+                     _Kty=CTools::byte *,
+                     _Ty=CTools::u32
+                 ]
+     1>h:\projects\compiler-tools\inc\Memory.hpp(12): warning C4251: 'CTools::Memory::m_freeTable' : class 'std::map<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'CTools::Memory'
+                 with
+                 [
+                     _Kty=CTools::byte *,
+                     _Ty=CTools::u32
+                 ]
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\bin\Release\CTools.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"..\bin\Release\CTools.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\bin\Release\CTools.lib" /MACHINE:X86 /SAFESEH /DLL obj\Release\CTools\FSM.obj
+         obj\Release\CTools\LexerFactory.obj
+         obj\Release\CTools\MachineWalker.obj
+         obj\Release\CTools\Memory.obj
+         obj\Release\CTools\PNode.obj
+         obj\Release\CTools\RecursiveDescent.obj
+         obj\Release\CTools\RegEx.obj
+         obj\Release\CTools\ScanMachine.obj
+         obj\Release\CTools\Services.obj
+            Creating library ..\bin\Release\CTools.lib and object ..\bin\Release\CTools.exp
+         CTools.vcxproj -> H:\Projects\compiler-tools\build\..\bin\Release\CTools.dll
+     1>Done Building Project "H:\Projects\compiler-tools\build\CTools.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.93

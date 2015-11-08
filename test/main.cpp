@@ -1,5 +1,6 @@
 #include <iostream>
 #include "CTools.hpp"
+#include <thread>
 
 using namespace std;
 using namespace CTools;
@@ -49,9 +50,20 @@ void error(string c, Position p)
 {
 	cerr<<"ERROR: "<<c<<" error in location row: "<<p.row<<", col: "<<p.col<<endl;
 }
+
+void parse(TokenStream &tokens)
+{
+	IParser* parser = new RecursiveDescent();
+	try{
+		PNode* program = parser->Parse(tokens);
+	}catch(exception e)
+	{
+		cerr<<e.what()<<endl;
+	}
+}
 int main(){
 	CTools::Services::init();
-	
+
 	/*
 	RegEx r,d, ex00,ex01;
 	r.createNFA("(a|b)*cd");
@@ -68,26 +80,41 @@ int main(){
 	walker.errorFunction = error;
 
 	walker.reset();
-	stringstream str("x := M + b {Wrfrwfw};\n wijf;");
+	stringstream str(
+		"Read x;\n"
+		"Read y;\n"
+		"z := 0;"
+		"Repeat\n"
+		"z := z + 1"
+		"Until z = y;"
+		"If x < y Then\n"
+		"Write y\n"
+		"Else\n"
+		"Write x\n"
+		"End\n"
+		);
+	
+	TokenStream tokens;
 	while(true)
 	{
 		Token tk = walker.token(str);
 		if(!tk.valid)
 			break;
+		tokens.push_back(tk);
 
 		cout<<tk.tag<<": "<<tk.lexeme<<endl;
 	}
-
-	walker.reset();
-	stringstream str2("x:=f..7+bfke");
-	while(true)
-	{
-		Token tk = walker.token(str2);
-		if(!tk.valid)
-			break;
-
-		cout<<tk.tag<<": "<<tk.lexeme<<endl;
-	}
+	parse(tokens);
+//	walker.reset();
+//	stringstream str2("x:=f..7+bfke");
+//	while(true)
+//	{
+//		Token tk = walker.token(str2);
+//		if(!tk.valid)
+//			break;
+//
+//		cout<<tk.tag<<": "<<tk.lexeme<<endl;
+//	}
 	/*
 	walker.walkContent("x:=3f7+b;");
 
