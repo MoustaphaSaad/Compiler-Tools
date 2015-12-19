@@ -53,16 +53,21 @@ void error(string c, Position p)
 
 void parse(TokenStream &tokens)
 {
-	IParser* parser = new RecursiveDescent();
+	std::ifstream file("Table.txt");
+	IParser* parser = new SLRParser(CTools::ParseTable::load(file));
 	try{
 		PNode* program = parser->Parse(tokens);
+		file.close();
 	}catch(exception e)
 	{
 		cerr<<e.what()<<endl;
+		file.close();
 	}
 }
 int main(){
 	CTools::Services::init();
+
+	//ParseTable table = CTools::ParseTable::load("Table.txt");
 
 	/*
 	RegEx r,d, ex00,ex01;
@@ -83,14 +88,14 @@ int main(){
 	stringstream str(
 		"Read x;\n"
 		"Read y;\n"
-		"z := 0;"
-		"Repeat\n"
-		"z := z + 1"
-		"Until z = y;"
+		"z := 5;\n"
+
 		"If x < y Then\n"
-		"Write y\n"
+			"If y < z Then\n"
+				"Write y\n"
+			"End\n"
 		"Else\n"
-		"Write x\n"
+			"Write x\n"
 		"End\n"
 		);
 	

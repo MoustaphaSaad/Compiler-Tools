@@ -86,7 +86,7 @@ PNode* RecursiveDescent::stmt_sequence()
 {
 	PNode* res = Services::memory->alloc<PNode>();
 	new (res) PNode();
-	res->Tag = "stmt-sequence";
+	res->Tag = "";
 	
 	auto stmt = statement();
 	rassert(stmt != nullptr, "unable to match stmt-sequence, expected 'statement' Node.");
@@ -112,7 +112,7 @@ PNode* RecursiveDescent::statement()
 {
 	PNode* res = Services::memory->alloc<PNode>();
 	new (res) PNode();
-	res->Tag = "statement";
+	res->Tag = "";
 
 	
 	if(m_cursor->tag == "IF")
@@ -265,44 +265,48 @@ PNode* RecursiveDescent::read_stmt()
 	assign-stmt = ID ':=' exp
 */
 PNode* RecursiveDescent::assign_stmt(){
-	PNode* res = Services::memory->alloc<PNode>();
-	new (res) PNode();
-	res->Tag = "assign-stmt";
 
 	auto id = match("ID");
 	rassert(id != nullptr,"unable to match token, expected 'ID' token.");
-	res->addChild(id);
-	auto assignNode = match("ASSIGNMENT_OP");
-	rassert(assignNode != nullptr,"unable to match token, expected 'ASSIGNMENT_OP' token.");
-	res->addChild(assignNode);
+
+	auto res = match("ASSIGNMENT_OP");
+	rassert(res != nullptr,"unable to match token, expected 'ASSIGNMENT_OP' token.");
+
 	auto expNode = exp();
 	rassert(expNode != nullptr, "unable to match assign-stmt, expected 'exp' node.");
+	
+	res->addChild(id);
 	res->addChild(expNode);
 	return res;
 }
 
 /*
 	exp = simple-exp comparison-op simple-exp | simple-exp
-	exp = simple-exp {comparison-op simple-exp}
 */
 PNode* RecursiveDescent::exp(){
-	PNode* res = Services::memory->alloc<PNode>();
-	new (res) PNode();
-	res->Tag = "exp";
+	PNode* res;
 
 	auto simpleNode = simple_exp();
 	rassert(simpleNode != nullptr, "unable to match exp, expected 'simple-exp' node.");
-	res->addChild(simpleNode);
+
 	if(m_cursor != m_end){
-		while(m_cursor != m_end && m_cursor->tag == "LESS_THAN" || m_cursor->tag == "EQUAL"){
-			auto comparisonNode = comparison_op();
-			rassert(comparisonNode != nullptr, "unable to match exp, expected 'comparison-op' node.");
+		if(m_cursor->tag == "LESS_THAN" || m_cursor->tag == "EQUAL"){
+
+			res = comparison_op();
+			rassert(res != nullptr, "unable to match exp, expected 'comparison-op' node.");
+
 			auto simpleNode2 = simple_exp();
 			rassert(simpleNode2 != nullptr, "unable to match exp, expected 'simple-exp' node.");
 
-			res->addChild(comparisonNode);
+			res->addChild(simpleNode);
 			res->addChild(simpleNode2);
+		}else
+		{
+			res = simpleNode;
 		}
+	}else
+	{
+		res = simpleNode;
 	}
 
 	return res;
@@ -312,17 +316,15 @@ PNode* RecursiveDescent::exp(){
 	comparison-op = '<' | '='
 */
 PNode* RecursiveDescent::comparison_op(){
-	PNode* res = Services::memory->alloc<PNode>();
-	new (res) PNode();
-	res->Tag = "comparison-op";
+	PNode* res;
 	if(m_cursor->tag == "LESS_THAN"){
 		auto less = match("LESS_THAN");
 		rassert(less != nullptr,"unable to match comparison-op, expected '<' token.");
-		res->addChild(less);
+		res = less;
 	}else if(m_cursor->tag == "EQUAL"){
 		auto eql = match("EQUAL");
 		rassert(eql != nullptr,"unable to match comparison-op, expected '=' token.");
-		res->addChild(eql);
+		res = eql;
 	}else{
 		rassert(false,"unable to match comparison-op, expected '<|=' token.");
 		return nullptr;
@@ -334,17 +336,15 @@ PNode* RecursiveDescent::comparison_op(){
 	addop = + | -
 */
 PNode* RecursiveDescent::add_op(){
-	PNode* res = Services::memory->alloc<PNode>();
-	new (res) PNode();
-	res->Tag = "addop";
+	PNode* res;
 	if(m_cursor->tag == "ADD_OP"){
 		auto less = match("ADD_OP");
 		rassert(less != nullptr,"unable to match comparison-op, expected '+' token.");
-		res->addChild(less);
+		res = less;
 	}else if(m_cursor->tag == "MINUS_OP"){
 		auto eql = match("MINUS_OP");
 		rassert(eql != nullptr,"unable to match comparison-op, expected '-' token.");
-		res->addChild(eql);
+		res = eql;
 	}else{
 		rassert(false,"unable to match comparison-op, expected '+|-' token.");
 		return nullptr;
@@ -356,12 +356,10 @@ PNode* RecursiveDescent::add_op(){
 	mulop = *
 */
 PNode* RecursiveDescent::mul_op(){
-	PNode* res = Services::memory->alloc<PNode>();
-	new (res) PNode();
-	res->Tag = "mulop";
+	PNode* res;
 	auto mul = match("MULTIPLY_OP");
 	rassert(mul != nullptr, "unable to match mulop, expected '*' token.");
-	res->addChild(mul);
+	res = mul;
 	return res;
 }
 
@@ -372,7 +370,7 @@ PNode* RecursiveDescent::mul_op(){
 PNode* RecursiveDescent::factor(){
 	PNode* res = Services::memory->alloc<PNode>();
 	new (res) PNode();
-	res->Tag = "factor";
+	res->Tag = "";
 	if(m_cursor->tag == "ID"){
 		auto id = match("ID");
 		rassert(id != nullptr, "unable to match factor, expected 'ID' token.");
@@ -404,23 +402,28 @@ PNode* RecursiveDescent::factor(){
 */
 
 PNode* RecursiveDescent::term(){
-	PNode* res = Services::memory->alloc<PNode>();
-	new (res) PNode();
-	res->Tag = "term";
+	PNode* res=nullptr;
 
 	auto factorNode = factor();
 	rassert(factorNode != nullptr, "unable to match term, expected 'factor' node.");
-	res->addChild(factorNode);
+
 	if(m_cursor != m_end){
 		while(m_cursor != m_end && m_cursor->tag == "MULTIPLY_OP"){
 			auto mulop = mul_op();
 			rassert(mulop != nullptr, "unable to match term, expected '*' token.");
+
 			auto factorNode2 = factor();
 			rassert(factorNode2 != nullptr, "unable to match term, expected 'factor' node.");
 
-			res->addChild(mulop);
+			res = mulop;
+			res->addChild(factorNode);
 			res->addChild(factorNode2);
 		}
+		if(res == nullptr)
+			res = factorNode;
+	}else
+	{
+		res = factorNode;
 	}
 	return res;
 }
@@ -430,23 +433,29 @@ PNode* RecursiveDescent::term(){
 	simple-exp = term {addop term}
 */
 PNode* RecursiveDescent::simple_exp(){
-	PNode* res = Services::memory->alloc<PNode>();
-	new (res) PNode();
-	res->Tag = "simple-exp";
+	PNode* res = nullptr;
 
 	auto termNode = term();
 	rassert(termNode != nullptr, "unable to match simple-exp, expected 'term' node.");
-	res->addChild(termNode);
+	
 	if(m_cursor != m_end){
 		while(m_cursor != m_end && m_cursor->tag == "MINUS_OP" || m_cursor->tag == "ADD_OP"){
 			auto addNode = add_op();
 			rassert(addNode != nullptr, "unable to match simple-exp, expected 'addop' node.");
+
 			auto termNode2 = term();
 			rassert(termNode2 != nullptr, "unable to match simple-exp, expected 'term' node.");
 
-			res->addChild(addNode);
+			res= addNode;
+			res->addChild(termNode);
 			res->addChild(termNode2);
 		}
+		if(res == nullptr)
+			res = termNode;
+	}else
+	{
+		res = termNode;
 	}
 	return res;
 }
+

@@ -1,10 +1,10 @@
-﻿Build started 08/11/2015 03:57:20 م.
+﻿Build started 20/12/2015 01:04:46 ص.
      1>Project "H:\Projects\compiler-tools\build\CTools.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\inc /Zi /nologo /W3 /WX- /Ox /Oi /Oy- /D NDEBUG /D COMPILE_DLL /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"obj\Release\CTools\\" /Fd"obj\Release\CTools\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt -std=c++11 -pthread ..\src\RecursiveDescent.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\inc /Zi /nologo /W3 /WX- /Ox /Oi /Oy- /D NDEBUG /D COMPILE_DLL /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"obj\Release\CTools\\" /Fd"obj\Release\CTools\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt -std=c++11 -pthread ..\src\SLRParser.cpp
      1>cl : Command line warning D9002: ignoring unknown option '-std=c++11'
      1>cl : Command line warning D9002: ignoring unknown option '-pthread'
-         RecursiveDescent.cpp
+         SLRParser.cpp
      1>h:\projects\compiler-tools\inc\FSM.hpp(11): warning C4251: 'CTools::State::m_transition' : class 'std::multimap<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'CTools::State'
                  with
                  [
@@ -123,25 +123,46 @@
                      _Traits=std::char_traits<char>,
                      _Alloc=std::allocator<char>
                  ]
-     1>H:\Projects\compiler-tools\inc\RecursiveDescent.hpp(12): warning C4251: 'CTools::RecursiveDescent::m_begin' : class 'std::_Deque_iterator<_Mydeque>' needs to have dll-interface to be used by clients of class 'CTools::RecursiveDescent'
+     1>h:\projects\compiler-tools\inc\ParseTable.hpp(18): warning C4251: 'CTools::Row::id' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of struct 'CTools::Row'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>h:\projects\compiler-tools\inc\ParseTable.hpp(31): warning C4251: 'CTools::Cell::reduce_rule' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of struct 'CTools::Cell'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>h:\projects\compiler-tools\inc\ParseTable.hpp(37): warning C4251: 'CTools::ParseTable::table' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of struct 'CTools::ParseTable'
+                 with
+                 [
+                     _Ty=CTools::Cell
+                 ]
+     1>H:\Projects\compiler-tools\inc\SLRParser.hpp(9): warning C4251: 'CTools::stackElement::str' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of struct 'CTools::stackElement'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>H:\Projects\compiler-tools\inc\SLRParser.hpp(18): warning C4251: 'CTools::SLRParser::m_begin' : class 'std::_Deque_iterator<_Mydeque>' needs to have dll-interface to be used by clients of class 'CTools::SLRParser'
                  with
                  [
                      _Mydeque=std::_Deque_val<std::_Deque_simple_types<CTools::Token>>
                  ]
-     1>H:\Projects\compiler-tools\inc\RecursiveDescent.hpp(13): warning C4251: 'CTools::RecursiveDescent::m_end' : class 'std::_Deque_iterator<_Mydeque>' needs to have dll-interface to be used by clients of class 'CTools::RecursiveDescent'
+     1>H:\Projects\compiler-tools\inc\SLRParser.hpp(18): warning C4251: 'CTools::SLRParser::m_end' : class 'std::_Deque_iterator<_Mydeque>' needs to have dll-interface to be used by clients of class 'CTools::SLRParser'
                  with
                  [
                      _Mydeque=std::_Deque_val<std::_Deque_simple_types<CTools::Token>>
                  ]
-     1>H:\Projects\compiler-tools\inc\RecursiveDescent.hpp(14): warning C4251: 'CTools::RecursiveDescent::m_cursor' : class 'std::_Deque_iterator<_Mydeque>' needs to have dll-interface to be used by clients of class 'CTools::RecursiveDescent'
+     1>H:\Projects\compiler-tools\inc\SLRParser.hpp(18): warning C4251: 'CTools::SLRParser::m_cursor' : class 'std::_Deque_iterator<_Mydeque>' needs to have dll-interface to be used by clients of class 'CTools::SLRParser'
                  with
                  [
                      _Mydeque=std::_Deque_val<std::_Deque_simple_types<CTools::Token>>
-                 ]
-     1>H:\Projects\compiler-tools\inc\RecursiveDescent.hpp(16): warning C4251: 'CTools::RecursiveDescent::m_errors' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'CTools::RecursiveDescent'
-                 with
-                 [
-                     _Ty=std::string
                  ]
      1>h:\projects\compiler-tools\inc\Memory.hpp(11): warning C4251: 'CTools::Memory::m_allocTable' : class 'std::map<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'CTools::Memory'
                  with
@@ -155,6 +176,7 @@
                      _Kty=CTools::byte *,
                      _Ty=CTools::u32
                  ]
+     1>..\src\SLRParser.cpp(12): warning C4018: '<' : signed/unsigned mismatch
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\bin\Release\CTools.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"..\bin\Release\CTools.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\bin\Release\CTools.lib" /MACHINE:X86 /SAFESEH /DLL obj\Release\CTools\FSM.obj
          obj\Release\CTools\LexerFactory.obj
@@ -165,10 +187,11 @@
          obj\Release\CTools\RegEx.obj
          obj\Release\CTools\ScanMachine.obj
          obj\Release\CTools\Services.obj
+         obj\Release\CTools\SLRParser.obj
             Creating library ..\bin\Release\CTools.lib and object ..\bin\Release\CTools.exp
          CTools.vcxproj -> H:\Projects\compiler-tools\build\..\bin\Release\CTools.dll
      1>Done Building Project "H:\Projects\compiler-tools\build\CTools.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.93
+Time Elapsed 00:00:02.48

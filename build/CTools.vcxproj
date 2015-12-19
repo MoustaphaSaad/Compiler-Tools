@@ -97,11 +97,13 @@
     <ClInclude Include="..\inc\LexerFactory.hpp" />
     <ClInclude Include="..\inc\MachineWalker.hpp" />
     <ClInclude Include="..\inc\Memory.hpp" />
+    <ClInclude Include="..\inc\ParseTable.hpp" />
     <ClInclude Include="..\inc\PNode.hpp" />
     <ClInclude Include="..\inc\RecursiveDescent.hpp" />
     <ClInclude Include="..\inc\RegEx.hpp" />
     <ClInclude Include="..\inc\ScanMachine.hpp" />
     <ClInclude Include="..\inc\Services.hpp" />
+    <ClInclude Include="..\inc\SLRParser.hpp" />
     <ClInclude Include="..\inc\TokenProcessor.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +116,7 @@
     <ClCompile Include="..\src\RegEx.cpp" />
     <ClCompile Include="..\src\ScanMachine.cpp" />
     <ClCompile Include="..\src\Services.cpp" />
+    <ClCompile Include="..\src\SLRParser.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
